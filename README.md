@@ -4,6 +4,10 @@ This is an unofficial API client library for the excellent worldbuilding site, [
 
 At the initial commit, the mocks have been built (and lightly modified) using the [1.0 API documentation](https://kanka.io/en-US/docs/1.0/) but not the live site, so some data may not be correctly serialized (but this will hopefully converge over time).
 
+## Documentation
+
+Generated automagically at https://godoc.org/github.com/byronwolfman/kanka-client/api.
+
 ## Example Usage
 
 Note that error-checking is skipped for brevity. The API client itself can be setup with a few calls:
