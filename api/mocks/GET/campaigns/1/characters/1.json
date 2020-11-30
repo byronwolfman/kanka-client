@@ -1,0 +1,36 @@
+{
+    "data": {
+        "id": 1,
+        "name": "Jonathan Green",
+        "entry": "\n<p>Lorem Ipsum.</p>\n",
+        "image": "https://example.com/image.png",
+        "image_full": "https://example.com/image_full.png",
+        "image_thumb": "https://example.com/image_thumb.png",
+        "has_custom_image": false,
+        "is_private": true,
+        "entity_id": 4,
+        "tags": [],
+        "created_at": "2019-01-29T16:40:34.000000Z",
+        "created_by": 1,
+        "updated_at": "2019-08-29T13:38:46.000000Z",
+        "updated_by": 1,
+        "location_id": 4,
+        "title": "The Hero",
+        "age": "39",
+        "sex": "Male",
+        "race_id": 3,
+        "type": "Player Character",
+        "family_id": 34,
+        "is_dead": true,
+        "traits": [
+            {
+                "id": 33,
+                "name": "Goals",
+                "entry": "Become a Paladin.",
+                "section": "personality",
+                "is_private": false,
+                "default_order": 0
+            }
+        ]
+    }
+}

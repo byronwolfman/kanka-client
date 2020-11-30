@@ -1,0 +1,26 @@
+{
+    "data": {
+        "id": 1,
+        "name": "Pelor's Quest",
+        "entry": "\n<p>Lorem Ipsum.</p>\n",
+        "image": "https://example.com/image.png",
+        "image_full": "https://example.com/image_full.png",
+        "image_thumb": "https://example.com/image_thumb.png",
+        "has_custom_image": false,
+        "is_private": true,
+        "entity_id": 164,
+        "tags": [],
+        "created_at":  "2019-01-30T00:01:44.000000Z",
+        "created_by": 1,
+        "updated_at":  "2019-08-29T13:48:54.000000Z",
+        "updated_by": 1,
+        "character_id": 4,
+        "type": "Main",
+        "date": "2020-04-20",
+        "is_completed": true,
+        "quest_id": 3,
+        "characters": 2,
+        "locations": 1
+    }
+
+}

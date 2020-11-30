@@ -1,0 +1,17 @@
+{
+    "data": [
+        {
+            "id": 3,
+            "name": "Spoon",
+            "is_private": true,
+            "created_at": "2020-07-25T16:24:34.000000Z",
+            "created_by": 1,
+            "updated_at": "2020-07-25T16:24:39.000000Z",
+            "updated_by": 1,
+            "is_shown": true,
+            "map_id": 1,
+            "position": 1,
+            "visibility": "all"
+        }
+    ]
+}

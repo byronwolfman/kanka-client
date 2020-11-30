@@ -1,0 +1,27 @@
+{
+    "data": [
+        {
+            "id": 31,
+            "name": "Shape",
+            "is_private": true,
+            "entity_id": 5,
+            "colour": "/en-US/docs/1.0/map_markers#008000",
+            "created_at": "2020-07-25T10:10:30.000000Z",
+            "created_by": 1,
+            "updated_at": "2020-07-25T10:10:35.000000Z",
+            "updated_by": 1,
+            "custom_icon": "https://example.com/marker.png",
+            "custom_shape": "500,500 500,600, 600,600 600,500",
+            "font_colour": "/en-US/docs/1.0/map_markers#000000",
+            "icon": "1",
+            "is_draggable": true,
+            "latitude": "422.857",
+            "longitude": "499.000",
+            "map_id": 1,
+            "opacity": 100,
+            "shape_id": 5,
+            "size_id": 1,
+            "visibility": "all"
+        }
+    ]
+}

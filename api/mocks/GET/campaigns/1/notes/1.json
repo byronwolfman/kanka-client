@@ -1,0 +1,22 @@
+{
+    "data": {
+        "id": 2,
+        "name": "Legends of the World",
+        "entry": "\n<p>Lorem Ipsum.</p>\n",
+        "image": "https://example.com/image.png",
+        "image_full": "https://example.com/image_full.png",
+        "image_thumb": "https://example.com/image_thumb.png",
+        "has_custom_image": false,
+        "is_private": true,
+        "entity_id": 7,
+        "note_id": "1",
+        "tags": [],
+        "created_at":  "2019-01-30T00:01:44.000000Z",
+        "created_by": 1,
+        "updated_at":  "2019-08-29T13:48:54.000000Z",
+        "updated_by": 1,
+        "type": "Lore",
+        "is_pinned": 0
+    }
+
+}

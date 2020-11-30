@@ -1,0 +1,23 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Session 2 - Descent into the Abyss",
+            "entry": "\n<p>Lorem Ipsum.</p>\n",
+            "image": "https://example.com/image.png",
+            "image_full": "https://example.com/image_full.png",
+            "image_thumb": "https://example.com/image_thumb.png",
+            "has_custom_image": false,
+            "is_private": true,
+            "entity_id": 42,
+            "tags": [],
+            "created_at":  "2019-01-30T00:01:44.000000Z",
+            "created_by": 1,
+            "updated_at":  "2019-08-29T13:48:54.000000Z",
+            "updated_by": 1,
+            "character_id": 11,
+            "date": "2017-11-02",
+            "type": "Session"
+        }
+    ]
+}

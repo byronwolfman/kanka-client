@@ -1,0 +1,96 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Georgian Calendar",
+            "entry": "\n<p>Lorem Ipsum.</p>\n",
+            "image": "https://example.com/image.png",
+            "image_full": "https://example.com/image_full.png",
+            "image_thumb": "https://example.com/image_thumb.png",
+            "has_custom_image": false,
+            "is_private": true,
+            "entity_id": 78,
+            "tags": [],
+            "created_at": "2019-01-28T06:29:29.000000Z",
+            "created_by": 1,
+            "updated_at": "2020-01-30T17:30:52.000000Z",
+            "updated_by": 1,
+            "type": "Primary",
+            "date": "311-2-3",
+            "parameters": null,
+            "months": [
+              {
+                "name": "January",
+                "length": 31,
+                "type": "standard"
+              },
+              {
+                "name": "February",
+                "length": 5,
+                "type": "intercalary"
+              }
+            ],
+            "start_offset": 1,
+            "weekdays": [
+                "Sul",
+                "Mol",
+                "Zol",
+                "Wir",
+                "Zor",
+                "Far",
+                "Sar"
+            ],
+            "years": {
+                "299": "Year of Blood and Fire",
+                "300": "Year of Water and Bone"
+            },
+            "seasons": [
+              {
+                  "name": "Spring",
+                  "month": 1,
+                  "day": 1
+              },
+              {
+                  "name": "Summer",
+                  "month": 4,
+                  "day": 1
+              }
+            ],
+            "moons": [
+              {
+                  "name": "Zarantyr",
+                  "fullmoon": "13",
+                  "offset": 0,
+                  "colour": "aqua"
+              },
+              {
+                  "name": "Olarune",
+                  "fullmoon": "17",
+                  "offset": 1,
+                  "colour": "brown"
+              }
+            ],
+            "suffix": "BC",
+            "has_leap_year": true,
+            "leap_year_amount": 4,
+            "leap_year_month": 2,
+            "leap_year_offset": 3,
+            "leap_year_start": 233
+        }
+    ],
+    "links": {
+        "first": "https://kanka.io/api/1.0/campaigns/1/calendars?page=1",
+        "last": "https://kanka.io/api/1.0/campaigns/1/calendars?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "path": "https://kanka.io/api/1.0/campaigns/1/calendars",
+        "per_page": 100,
+        "to": 1,
+        "total": 1
+    }
+}
