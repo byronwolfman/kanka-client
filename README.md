@@ -24,11 +24,11 @@ import (
 
 func main() {
 
-    config := kanka.DefaultConfig()
-    config.Token = "personal-access-token"
+	config := kanka.DefaultConfig()
+	config.Token = "personal-access-token"
 
 	client := kanka.NewClient(config)
-    ctx := context.Background()
+	ctx := context.Background()
     ...
 }
 ```
@@ -77,7 +77,7 @@ client := kanka.NewClient(
 		ForceTLS: false,                         // Defaults to true
 		Token:    "1234",                        // Defaults to ""
 		Timeout:  time.Second * 30,              // Defaults to 15 seconds
-    },
+	},
 )
 ```
 
