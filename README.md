@@ -29,7 +29,7 @@ func main() {
 
 	client := kanka.NewClient(config)
 	ctx := context.Background()
-    ...
+	...
 }
 ```
 
