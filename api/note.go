@@ -50,7 +50,7 @@ func (n *Notes) GetNotes(ctx context.Context) (*[]Note, error) {
 
 	var err error
 	resp := []Note{}
-	url := fmt.Sprintf("%s", n.urlPrefix)
+	url := n.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Note{}

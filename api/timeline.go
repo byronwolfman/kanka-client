@@ -58,7 +58,7 @@ func (t *Timelines) GetTimelines(ctx context.Context) (*[]Timeline, error) {
 
 	var err error
 	resp := []Timeline{}
-	url := fmt.Sprintf("%s", t.urlPrefix)
+	url := t.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Timeline{}

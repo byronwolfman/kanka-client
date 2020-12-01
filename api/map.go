@@ -109,7 +109,7 @@ func (m *Maps) GetMaps(ctx context.Context) (*[]Map, error) {
 
 	var err error
 	resp := []Map{}
-	url := fmt.Sprintf("%s", m.urlPrefix)
+	url := m.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Map{}

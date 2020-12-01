@@ -51,7 +51,7 @@ func (t *Tags) GetTags(ctx context.Context) (*[]Tag, error) {
 
 	var err error
 	resp := []Tag{}
-	url := fmt.Sprintf("%s", t.urlPrefix)
+	url := t.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Tag{}

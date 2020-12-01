@@ -49,7 +49,7 @@ func (r *Races) GetRaces(ctx context.Context) (*[]Race, error) {
 
 	var err error
 	resp := []Race{}
-	url := fmt.Sprintf("%s", r.urlPrefix)
+	url := r.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Race{}

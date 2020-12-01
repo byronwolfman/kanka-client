@@ -50,7 +50,7 @@ func (e *Events) GetEvents(ctx context.Context) (*[]Event, error) {
 
 	var err error
 	resp := []Event{}
-	url := fmt.Sprintf("%s", e.urlPrefix)
+	url := e.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Event{}

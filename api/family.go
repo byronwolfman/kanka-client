@@ -51,7 +51,7 @@ func (f *Families) GetFamilies(ctx context.Context) (*[]Family, error) {
 
 	var err error
 	resp := []Family{}
-	url := fmt.Sprintf("%s", f.urlPrefix)
+	url := f.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Family{}

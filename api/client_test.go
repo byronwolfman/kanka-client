@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -58,7 +59,8 @@ func TestMakeRequest(t *testing.T) {
 			res.WriteHeader(200)
 		}
 
-		res.Write([]byte("body"))
+		_, err := res.Write([]byte("body"))
+		assert.NoError(t, err)
 	}))
 	defer func() { testServer.Close() }()
 
@@ -88,7 +90,7 @@ func mockTestServer() (*httptest.Server, *Config) {
 
 		// Mock file will be at a filepath that matches the URL path
 		mockFile := fmt.Sprintf("mocks/%s/%s.json", req.Method, req.URL.Path)
-		body, err := ioutil.ReadFile(mockFile)
+		body, err := ioutil.ReadFile(filepath.Clean(mockFile))
 		if err != nil {
 			res.WriteHeader(404)
 			return
@@ -96,7 +98,11 @@ func mockTestServer() (*httptest.Server, *Config) {
 
 		res.Header().Set("Content-Type", "application/json")
 		res.WriteHeader(200)
-		res.Write([]byte(body))
+		_, err = res.Write([]byte(body))
+
+		if err != nil {
+			panic(fmt.Sprintf("mockTestServer encountered error while writing response: %v", err))
+		}
 	}))
 
 	// Create a client config for reaching the server
