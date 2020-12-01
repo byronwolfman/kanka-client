@@ -98,7 +98,7 @@ fmt.Println(client.BaseURL)
 
 The protocol is re-checked on all API calls since the base URL could otherwise be changed back again with `client.BaseURL = http://example.com`.
 
-The `ForceTLS` option exists to promote secure by the default, but also because sometimes Kanka may return a pagination object with a URL to the next page with a plain HTTP protocol:
+The `ForceTLS` option exists to promote security by the default, but also because Kanka may return a pagination object with plaintext URLs which cannot be queried.
 
 ```sh
 curl \
