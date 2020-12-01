@@ -17,6 +17,17 @@ jobs:
         with:
           args: ./...
 
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Go lint check
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+
   test:
     runs-on: ubuntu-20.04
     strategy:
@@ -42,11 +53,6 @@ jobs:
 
       - name: Go fmt check
         run: diff -u <(echo -n) <(gofmt -d ./)
-
-      - name: Go lint check
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.29
 
       - name: Go mod tidy check
         run: |
