@@ -86,7 +86,7 @@ func (c *Calendars) GetCalendars(ctx context.Context) (*[]Calendar, error) {
 
 	var err error
 	resp := []Calendar{}
-	url := fmt.Sprintf("%s", c.urlPrefix)
+	url := c.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Calendar{}

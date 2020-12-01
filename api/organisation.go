@@ -51,7 +51,7 @@ func (o *Organisations) GetOrganisations(ctx context.Context) (*[]Organisation, 
 
 	var err error
 	resp := []Organisation{}
-	url := fmt.Sprintf("%s", o.urlPrefix)
+	url := o.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Organisation{}

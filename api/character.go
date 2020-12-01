@@ -67,7 +67,7 @@ func (c *Characters) GetCharacters(ctx context.Context) (*[]Character, error) {
 
 	var err error
 	resp := []Character{}
-	url := fmt.Sprintf("%s", c.urlPrefix)
+	url := c.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		fmt.Println("Getting", url)

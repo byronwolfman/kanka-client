@@ -50,7 +50,7 @@ func (a *Abilities) GetAbilities(ctx context.Context) (*[]Ability, error) {
 
 	var err error
 	resp := []Ability{}
-	url := fmt.Sprintf("%s", a.urlPrefix)
+	url := a.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Ability{}

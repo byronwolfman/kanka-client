@@ -8,7 +8,8 @@ import (
 
 // Campaigns is used to query the campaigns endpoints
 type Campaigns struct {
-	client *Client
+	client    *Client
+	urlPrefix string
 }
 
 // Campaign is used to serialize a campaign object
@@ -45,7 +46,10 @@ type CampaignUser struct {
 
 // Campaigns returns a handle on the campaigns endpoints
 func (c *Client) Campaigns() *Campaigns {
-	return &Campaigns{client: c}
+	return &Campaigns{
+		client:    c,
+		urlPrefix: "/campaigns",
+	}
 }
 
 // GetCampaigns can return information about all campaigns
@@ -53,7 +57,7 @@ func (c *Campaigns) GetCampaigns(ctx context.Context) (*[]Campaign, error) {
 
 	var err error
 	resp := []Campaign{}
-	url := "/campaigns"
+	url := c.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Campaign{}
@@ -68,6 +72,6 @@ func (c *Campaigns) GetCampaigns(ctx context.Context) (*[]Campaign, error) {
 func (c *Campaigns) GetCampaign(ctx context.Context, id int) (*Campaign, error) {
 
 	resp := Campaign{}
-	_, err := c.client.makeRequest(ctx, "GET", fmt.Sprintf("/campaigns/%d", id), &resp)
+	_, err := c.client.makeRequest(ctx, "GET", fmt.Sprintf("/%s/%d", c.urlPrefix, id), &resp)
 	return &resp, err
 }

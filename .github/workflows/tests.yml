@@ -1,10 +1,13 @@
 name: go test
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - main
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         go-version: [1.14.x, 1.15.x]
@@ -25,6 +28,22 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
+
+      - name: Go fmt check
+        run: diff -u <(echo -n) <(gofmt -d ./)
+
+      - name: Go lint check
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+
+      - name: Go mod tidy check
+        run: |
+          go mod tidy
+          git diff --exit-code
+
+      - name: Run gosec security scanner
+        uses: securego/gosec@master
 
       - name: Run tests
         run: go test ./...

@@ -50,7 +50,7 @@ func (j *Journals) GetJournals(ctx context.Context) (*[]Journal, error) {
 
 	var err error
 	resp := []Journal{}
-	url := fmt.Sprintf("%s", j.urlPrefix)
+	url := j.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Journal{}

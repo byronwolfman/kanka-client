@@ -52,7 +52,7 @@ func (i *Items) GetItems(ctx context.Context) (*[]Item, error) {
 
 	var err error
 	resp := []Item{}
-	url := fmt.Sprintf("%s", i.urlPrefix)
+	url := i.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Item{}

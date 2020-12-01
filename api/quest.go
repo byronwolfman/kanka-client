@@ -106,7 +106,7 @@ func (q *Quests) GetQuests(ctx context.Context) (*[]Quest, error) {
 
 	var err error
 	resp := []Quest{}
-	url := fmt.Sprintf("%s", q.urlPrefix)
+	url := q.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Quest{}

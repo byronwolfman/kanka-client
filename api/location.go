@@ -67,7 +67,7 @@ func (l *Locations) GetLocations(ctx context.Context) (*[]Location, error) {
 
 	var err error
 	resp := []Location{}
-	url := fmt.Sprintf("%s", l.urlPrefix)
+	url := l.urlPrefix
 
 	for len(url) > 0 && err == nil {
 		page := []Location{}

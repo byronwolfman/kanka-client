@@ -137,7 +137,7 @@ func (c *Client) makeRequest(ctx context.Context, method string, endpoint string
 	}
 
 	// Bail out for non-JSON responses
-	respContentHeader := resp.Header.Get(http.CanonicalHeaderKey("Content-Type"))
+	respContentHeader := resp.Header.Get("Content-Type")
 	if !strings.Contains(strings.ToLower(respContentHeader), "application/json") {
 		return "", fmt.Errorf("Non-JSON response: %s, Content-Type: %s", resp.Status, respContentHeader)
 	}
