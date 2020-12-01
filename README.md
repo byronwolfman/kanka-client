@@ -98,7 +98,34 @@ fmt.Println(client.BaseURL)
 
 The protocol is re-checked on all API calls since the base URL could otherwise be changed back again with `client.BaseURL = http://example.com`.
 
-The reason for `ForceTLS` is to promote secure by the default, but also because sometimes Kanka will return a pagination object with a URL to the next page with a plain HTTP protocol. The extra measure behind `ForceTLS` makes a best effort to avoid sending such traffic in plaintext.
+The `ForceTLS` option exists to promote security by the default, but also because Kanka may return a pagination object with plaintext URLs which cannot be queried.
+
+```sh
+curl \
+  -Ss \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -H "Content-Type: application/json" \
+  "https://kanka.io/api/1.0/campaigns/1234/characters" \
+  | jq
+
+{
+  "data": [
+    {...}
+  ],
+  "links": {
+    "first": "http://kanka.io/api/1.0/campaigns/1234/characters?page=1",  # Plain HTTP
+    "last": "http://kanka.io/api/1.0/campaigns/1234/characters?page=2",   # Plain HTTP
+    "prev": null,
+    "next": "http://kanka.io/api/1.0/campaigns/1234/characters?page=2"    # Plain HTTP
+  },
+  "meta": {...}
+}
+```
+
+The API client is designed to follow these links in order to retrieve the paginated results. To avoid leaking the API token, the client makes two additional checks:
+
+1. If `ForceTLS` is enabled but the link protocol is plain HTTP, then the link will be re-written as HTTPS before it is followed.
+1. If the link's base URL does not match the client's configured base URL (including after being upgraded if `ForceTLS` is enabled) then the client will throw an error and refuse to follow the link.
 
 Probably the only reason to disable `ForceTLS` is for writing tests (which uses a localhost proxy) or to do traffic inspection through your own MitM proxy.
 
