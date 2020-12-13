@@ -10,7 +10,11 @@ Generated automagically at https://godoc.org/github.com/byronwolfman/kanka-clien
 
 ## Example Usage
 
-Note that error-checking is skipped for brevity. The API client itself can be setup with a few calls:
+Note that error-checking is skipped for brevity.
+
+### Client Setup
+
+The API client itself can be setup with a few calls:
 
 ```go
 package main
@@ -33,7 +37,23 @@ func main() {
 }
 ```
 
-You can ask for a list of all objects of a given type. Be careful in that the client doesn't rate-limit itself in any way at the moment.
+The default client configuration should be suitable for most cases, but can be modified if needed:
+
+```go
+client := kanka.NewClient(
+	&kanka.Config{
+		BaseURL:              "https://example.com/api/1.0", // Defaults to https://kanka.io/api/1.0
+		ForceTLS:             false,                         // Defaults to true
+		MaxRequestsPerMinute: 90,                            // Defaults to 30
+		Token:                "1234",                        // Defaults to ""
+		Timeout:              time.Second * 30,              // Defaults to 15 seconds
+	},
+)
+```
+
+### Requesting Objects
+
+You can ask for a list of all objects of a given type. Kanka returns paginated results of up to 15 objects per page which the client automatically depaginates. For particularly large responses this may run afoul of throttling, so the client makes a best effort to rate-limit itself (described in more detail further down).
     
 ```go
 // Set the campaign ID
@@ -68,20 +88,9 @@ fmt.Println(item.Name)
 fmt.Println(item.Type)
 ```
 
-The default client configuration should be suitable for most cases, but can be modified if needed:
+### TLS Configuration
 
-```go
-client := kanka.NewClient(
-	&kanka.Config{
-		BaseURL:  "https://example.com/api/1.0", // Defaults to https://kanka.io/api/1.0
-		ForceTLS: false,                         // Defaults to true
-		Token:    "1234",                        // Defaults to ""
-		Timeout:  time.Second * 30,              // Defaults to 15 seconds
-	},
-)
-```
-
-The `ForceTLS` parameter bears some explaining. When enabled, a config passed with a plain-HTTP base URL will be upgraded when the client initializes:
+The `ForceTLS` parameter is enabled by default and bears some explaining. When enabled, a config passed with a plain-HTTP base URL will be upgraded when the client initializes:
 
 ```go
 client := kanka.NewClient(
@@ -128,6 +137,36 @@ The API client is designed to follow these links in order to retrieve the pagina
 1. If the link's base URL does not match the client's configured base URL (including after being upgraded if `ForceTLS` is enabled) then the client will throw an error and refuse to follow the link.
 
 Probably the only reason to disable `ForceTLS` is for writing tests (which uses a localhost proxy) or to do traffic inspection through your own MitM proxy.
+
+### Rate-Limiting
+
+The Kanka API allows a maximum of 30 requests per minute per client, or 90 requests per minute for subscribers. The Kanka API returns HTTP 429 if this limit is exceeded.
+
+To make a best effort to avoid being throttled, the client rate-limits itself to 30 requests per minute by default:
+
+```go
+// Rate-limited to the default 30 requests per minute
+client := kanka.NewClient(kanka.DefaultConfig())
+
+// Also rate-limited to the default 30 requests per minute
+client := kanka.NewClient(
+	&kanka.Config{
+		BaseURL: "https://example.com/api/1.0",
+		Token:   "1234",
+	},
+)
+
+// Rate-limited to 90 requests per minute, high enough for subscribers
+client := kanka.NewClient(
+	&kanka.Config{
+		BaseURL:              "https://example.com/api/1.0",
+		MaxRequestsPerMinute: 90,
+		Token:                "1234",
+	},
+)
+```
+
+The limit is immutable at client creation time and therefore must be passed through a Config object. With the default limit, the client will be able to dispatch up to 30 requests in quick succession without slowing itself down. If the client needs to make a 31st request however, then that request will be blocked for 1 minute beginning from the moment the 1st request received its response.
 
 ## Contributing
 

@@ -70,7 +70,6 @@ func (c *Characters) GetCharacters(ctx context.Context) (*[]Character, error) {
 	url := c.urlPrefix
 
 	for len(url) > 0 && err == nil {
-		fmt.Println("Getting", url)
 		page := []Character{}
 		url, err = c.client.makeRequest(ctx, "GET", url, &page)
 		resp = append(resp, page...)

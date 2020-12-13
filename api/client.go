@@ -14,24 +14,31 @@ import (
 )
 
 const (
-	// BaseURLV1 is the default 1.0 base URL for the Kanka API
-	BaseURLV1 = "https://kanka.io/api/1.0"
+	// KankaBaseURLV1 is the default 1.0 base URL for the Kanka API
+	KankaBaseURLV1 = "https://kanka.io/api/1.0"
+	// DefaultMaxRequestsPerMinute is the number of requests per minute before client self-rate-limits
+	DefaultMaxRequestsPerMinute = 30
+	// DefaultTimeout for http client request timeouts
+	DefaultTimeout = time.Second * 15
 )
 
 // Client provides a client to the Kanka API
 type Client struct {
-	BaseURL    string
-	ForceTLS   bool
-	token      string
-	HTTPClient *http.Client
+	BaseURL                string
+	ForceTLS               bool
+	rateLimiter            chan int
+	rateLimitResetInterval time.Duration
+	token                  string
+	HTTPClient             *http.Client
 }
 
 // Config is used to configure the creation of a client
 type Config struct {
-	BaseURL  string
-	ForceTLS bool
-	Token    string
-	Timeout  time.Duration
+	BaseURL              string
+	ForceTLS             bool
+	MaxRequestsPerMinute time.Duration
+	Token                string
+	Timeout              time.Duration
 }
 
 // Response is used to serialize a successful API response
@@ -63,26 +70,50 @@ type Meta struct {
 // DefaultConfig returns a default configuration for the client
 func DefaultConfig() *Config {
 	return &Config{
-		BaseURL:  BaseURLV1,
-		Timeout:  time.Second * 15,
-		ForceTLS: true,
+		BaseURL:              KankaBaseURLV1,
+		MaxRequestsPerMinute: DefaultMaxRequestsPerMinute,
+		Timeout:              DefaultTimeout,
+		ForceTLS:             true,
 	}
 }
 
 // NewClient returns a new client
 func NewClient(c *Config) *Client {
+
+	// Assert https if ForceTLS is true
 	if strings.HasPrefix(c.BaseURL, "http://") && c.ForceTLS {
 		c.BaseURL = strings.Replace(c.BaseURL, "http", "https", 1)
 	}
 
+	// Assert that config's MaxRequestsPerMinute is above zero
+	if c.MaxRequestsPerMinute <= 0 {
+		c.MaxRequestsPerMinute = DefaultMaxRequestsPerMinute
+	}
+
+	// Create and return client
 	return &Client{
-		BaseURL:  c.BaseURL,
-		ForceTLS: c.ForceTLS,
-		token:    c.Token,
+		BaseURL:                c.BaseURL,
+		ForceTLS:               c.ForceTLS,
+		rateLimiter:            make(chan int, c.MaxRequestsPerMinute),
+		rateLimitResetInterval: time.Minute,
+		token:                  c.Token,
 		HTTPClient: &http.Client{
 			Timeout: c.Timeout,
 		},
 	}
+}
+
+// SetRateLimitResetInterval adjusts how quickly requests are unblocked by the rate-limiter channel.
+// This should almost never be modified. The rate-limiter receives MaxRequestsPerMinute from a Config
+// object which assumes that the reset interval is 1 minute. The rate-limiter will work incorrectly
+// if the reset interval is changed to anything other than 1 minute. The only reason to change the
+// rate-limit interval is for convenience when writing tests for the rate-limiter so that it's not
+// necessary to wait a full minute for tests to pass. Outside of this use case, avoid modifying it.
+//
+// Another more dangerous way to think about this function is that it effectively adjusts how long
+// 1 minute is considered by the rate-limiter.
+func (c *Client) SetRateLimitResetInterval(duration time.Duration) {
+	c.rateLimitResetInterval = duration
 }
 
 // makeRequest is a convenience function to make a request at a given URL endpoint, and then decode the response into v
@@ -121,6 +152,15 @@ func (c *Client) makeRequest(ctx context.Context, method string, endpoint string
 	req = req.WithContext(ctx)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.token))
 	req.Header.Set("Content-Type", "application/json")
+
+	// Self-rate limit; the channel will block if we request too fast
+	c.rateLimiter <- 1
+	defer func() {
+		go func() {
+			time.Sleep(c.rateLimitResetInterval)
+			<-c.rateLimiter
+		}()
+	}()
 
 	// Make the reqest
 	resp, err := c.HTTPClient.Do(req)
