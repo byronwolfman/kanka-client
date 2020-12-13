@@ -17,7 +17,7 @@ func TestDefaultConfig(t *testing.T) {
 
 	config := DefaultConfig()
 
-	assert.Equal(t, BaseURLV1, config.BaseURL)
+	assert.Equal(t, KankaBaseURLV1, config.BaseURL)
 	assert.True(t, config.ForceTLS)
 	assert.Equal(t, time.Second*15, config.Timeout)
 	assert.Empty(t, config.Token)
@@ -28,7 +28,7 @@ func TestNewClient(t *testing.T) {
 	// Verify that client matches passed configs
 	client := NewClient(DefaultConfig())
 
-	assert.Equal(t, BaseURLV1, client.BaseURL)
+	assert.Equal(t, KankaBaseURLV1, client.BaseURL)
 	assert.True(t, client.ForceTLS)
 	assert.Equal(t, time.Second*15, client.HTTPClient.Timeout)
 	assert.Empty(t, client.token)
@@ -44,7 +44,7 @@ func TestNewClient(t *testing.T) {
 	assert.Equal(t, "https://example.com/api/1.0", client.BaseURL)
 }
 
-func TestMakeRequest(t *testing.T) {
+func TestRequestResponses(t *testing.T) {
 
 	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 
@@ -79,6 +79,50 @@ func TestMakeRequest(t *testing.T) {
 	// Test Content-Type header
 	_, err = client.makeRequest(ctx, "GET", "/bad-content-type", nil)
 	assert.EqualError(t, err, "Non-JSON response: 200 OK, Content-Type: text/html")
+}
+
+func TestSelfRateLimit(t *testing.T) {
+
+	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.Header().Set("Content-Type", "application/json")
+		res.WriteHeader(200)
+		_, err := res.Write([]byte("{}"))
+		assert.NoError(t, err)
+	}))
+	defer func() { testServer.Close() }()
+
+	// Create client
+	config := DefaultConfig()
+	config.BaseURL = testServer.URL
+	config.ForceTLS = false
+	config.MaxRequestsPerMinute = 30
+
+	client := NewClient(config)
+	client.SetRateLimitResetInterval(2 * time.Second) // Speed up tests
+	ctx := context.Background()
+
+	// 30 requests should complete quickly with no rate-limiting; 100ms ought to be more than enough
+	start := time.Now()
+	for i := 0; i < 30; i++ {
+		_, err := client.makeRequest(ctx, "GET", "/", nil)
+		assert.NoError(t, err)
+	}
+	end := time.Now()
+	assert.True(t, end.Before(start.Add(100*time.Millisecond)))
+
+	// Create new client to reset rate-limit
+	client = NewClient(config)
+	client.SetRateLimitResetInterval(2 * time.Second) // Speed up tests
+
+	// 31 requests should complete with ~ 2 seconds of rate-limiting
+	start = time.Now()
+	for i := 0; i < 31; i++ {
+		_, err := client.makeRequest(ctx, "GET", "/", nil)
+		assert.NoError(t, err)
+	}
+	end = time.Now()
+	assert.True(t, end.Before(start.Add(2500*time.Millisecond)))
+	assert.True(t, end.After(start.Add(2000*time.Millisecond)))
 }
 
 // mockTestServer is a convenience function to return an httptest server
