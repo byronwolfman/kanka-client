@@ -38,6 +38,13 @@ type Item struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("item", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		item, _ := client.Items(campaignID).GetItem(ctx, entityID)
+		return item.Name
+	})
+}
+
 // Items returns a handle of the items endpoint
 func (c *Client) Items(campaignID int) *Items {
 	return &Items{

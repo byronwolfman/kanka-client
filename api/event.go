@@ -36,6 +36,13 @@ type Event struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("event", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		event, _ := client.Events(campaignID).GetEvent(ctx, entityID)
+		return event.Name
+	})
+}
+
 // Events returns a handle of the events endpoint
 func (c *Client) Events(campaignID int) *Events {
 	return &Events{

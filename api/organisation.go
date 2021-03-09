@@ -37,6 +37,13 @@ type Organisation struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("organisation", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		organisation, _ := client.Organisations(campaignID).GetOrganisation(ctx, entityID)
+		return organisation.Name
+	})
+}
+
 // Organisations returns a handle of the organisations endpoint
 func (c *Client) Organisations(campaignID int) *Organisations {
 	return &Organisations{

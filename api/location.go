@@ -53,6 +53,13 @@ type MapPoint struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+func init() {
+	addKnownLinkType("location", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		location, _ := client.Locations(campaignID).GetLocation(ctx, entityID)
+		return location.Name
+	})
+}
+
 // Locations returns a handle on the locations endpoints
 func (c *Client) Locations(campaignID int) *Locations {
 	return &Locations{

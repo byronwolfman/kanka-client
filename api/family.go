@@ -37,6 +37,13 @@ type Family struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("family", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		family, _ := client.Families(campaignID).GetFamily(ctx, entityID)
+		return family.Name
+	})
+}
+
 // Families returns a handle on the families endpoint
 func (c *Client) Families(campaignID int) *Families {
 	return &Families{

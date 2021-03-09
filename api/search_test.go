@@ -51,3 +51,23 @@ func TestSearch(t *testing.T) {
 		assert.Equal(t, 1, r.UpdatedBy)
 	}
 }
+
+func TestResolveLinksToText(t *testing.T) {
+
+	testServer, config := mockTestServer()
+	defer testServer.Close()
+	client := NewClient(config)
+	ctx := context.Background()
+
+	// Test successful resolution
+	rawTestString := "[character:1] hails from [location:1]"
+	resolvedTestString := client.Searches(1).ResolveLinksToText(ctx, rawTestString)
+
+	assert.Equal(t, "Jonathan Green hails from Mordor", resolvedTestString)
+
+	// Test unsuccessful resolution
+	rawTestString = "[character:100] hails from [location:1]"
+	resolvedTestString = client.Searches(1).ResolveLinksToText(ctx, rawTestString)
+
+	assert.Equal(t, "[character:100] hails from Mordor", resolvedTestString)
+}

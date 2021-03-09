@@ -92,6 +92,13 @@ type QuestOrganisation struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("quest", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		quest, _ := client.Quests(campaignID).GetQuest(ctx, entityID)
+		return quest.Name
+	})
+}
+
 // Quests returns a handle of the quests endpoint
 func (c *Client) Quests(campaignID int) *Quests {
 	return &Quests{

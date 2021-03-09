@@ -72,6 +72,13 @@ type Season struct {
 	Day   int    `json:"day"`
 }
 
+func init() {
+	addKnownLinkType("calendar", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		calendar, _ := client.Calendars(campaignID).GetCalendar(ctx, entityID)
+		return calendar.Name
+	})
+}
+
 // Calendars returns a handle of the calendars endpoint
 func (c *Client) Calendars(campaignID int) *Calendars {
 	return &Calendars{

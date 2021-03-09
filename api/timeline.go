@@ -44,6 +44,13 @@ type Era struct {
 	EndYear      int    `json:"end_year"`
 }
 
+func init() {
+	addKnownLinkType("timeline", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		timeline, _ := client.Timelines(campaignID).GetTimeline(ctx, entityID)
+		return timeline.Name
+	})
+}
+
 // Timelines returns a handle of the timelines endpoint
 func (c *Client) Timelines(campaignID int) *Timelines {
 	return &Timelines{

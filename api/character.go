@@ -53,6 +53,13 @@ type Trait struct {
 	DefaultOrder int    `json:"default_order"`
 }
 
+func init() {
+	addKnownLinkType("character", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		character, _ := client.Characters(campaignID).GetCharacter(ctx, entityID)
+		return character.Name
+	})
+}
+
 // Characters returns a handle on the characters endpoint
 func (c *Client) Characters(campaignID int) *Characters {
 	return &Characters{
