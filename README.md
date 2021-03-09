@@ -1,4 +1,4 @@
-[![Go Reference](https://pkg.go.dev/badge/github.com/byronwolfman/kanka-client.svg)](https://pkg.go.dev/github.com/byronwolfman/kanka-client)
+[![Go Reference](https://pkg.go.dev/badge/github.com/byronwolfman/kanka-client.svg)](https://pkg.go.dev/github.com/byronwolfman/kanka-client) [![Go Report Card](https://goreportcard.com/badge/github.com/byronwolfman/kanka-client)](https://goreportcard.com/report/github.com/byronwolfman/kanka-client)
 
 # Kanka Client
 
