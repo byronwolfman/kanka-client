@@ -33,7 +33,7 @@ func TestNewClient(t *testing.T) {
 	assert.Equal(t, time.Second*15, client.HTTPClient.Timeout)
 	assert.Empty(t, client.token)
 
-	// Make sure that protocol is ugpraded to https if ForceTLS is true
+	// Make sure that protocol is upgraded to https if ForceTLS is true
 	client = NewClient(
 		&Config{
 			BaseURL:  "http://example.com/api/1.0",
