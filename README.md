@@ -1,12 +1,10 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/byronwolfman/kanka-client.svg)](https://pkg.go.dev/github.com/byronwolfman/kanka-client)
+
 # Kanka Client
 
 This is an unofficial API client library for the excellent worldbuilding site, [Kanka](https://kanka.io/). The methods in this library follow the API as closely as possible with certain caveats. In particular, most of the core object `GET` methods are covered, but not all, and even then not all attributes are serialized.
 
 At the initial commit, the mocks have been built (and lightly modified) using the [1.0 API documentation](https://kanka.io/en-US/docs/1.0/) but not the live site, so some data may not be correctly serialized (but this will hopefully converge over time).
-
-## Documentation
-
-Generated automagically at https://godoc.org/github.com/byronwolfman/kanka-client/api.
 
 ## Example Usage
 
