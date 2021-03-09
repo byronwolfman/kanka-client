@@ -72,9 +72,9 @@ func (s *Searches) Search(ctx context.Context, searchTerm string) (*[]SearchResu
 	return &resp, err
 }
 
-// ResolveLinks attempts to lookup and resolve the names of linked entities in a string.
+// ResolveLinksToText attempts to lookup and resolve the names of linked entities in a string.
 // E.g. attempt to resolve "Hailing from the city of [location:1234]" to "Hailing from the city of Neverwinter"
-func (s *Searches) ResolveLinks(ctx context.Context, rawString string) string {
+func (s *Searches) ResolveLinksToText(ctx context.Context, rawString string) string {
 
 	// Extract [alpha:digit] instances from string
 	links := linkRe.FindAllString(rawString, -1)
