@@ -36,6 +36,13 @@ type Journal struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("journal", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		journal, _ := client.Journals(campaignID).GetJournal(ctx, entityID)
+		return journal.Name
+	})
+}
+
 // Journals returns a handle of the journals endpoint
 func (c *Client) Journals(campaignID int) *Journals {
 	return &Journals{

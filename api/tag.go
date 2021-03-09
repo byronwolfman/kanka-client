@@ -37,6 +37,13 @@ type Tag struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("tag", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		tag, _ := client.Tags(campaignID).GetTag(ctx, entityID)
+		return tag.Name
+	})
+}
+
 // Tags returns a handle of the tags endpoint
 func (c *Client) Tags(campaignID int) *Tags {
 	return &Tags{

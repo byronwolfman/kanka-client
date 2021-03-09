@@ -36,6 +36,13 @@ type Ability struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("ability", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		ability, _ := client.Abilities(campaignID).GetAbility(ctx, entityID)
+		return ability.Name
+	})
+}
+
 // Abilities returns a handle of the abilities endpoint
 func (c *Client) Abilities(campaignID int) *Abilities {
 	return &Abilities{

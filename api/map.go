@@ -95,6 +95,13 @@ type MapGroup struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("map", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		m, _ := client.Maps(campaignID).GetMap(ctx, entityID)
+		return m.Name
+	})
+}
+
 // Maps returns a handle of the maps endpoint
 func (c *Client) Maps(campaignID int) *Maps {
 	return &Maps{

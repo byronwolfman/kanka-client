@@ -4,8 +4,17 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 )
+
+var linkRe *regexp.Regexp = regexp.MustCompile(`\[[a-z]+:[0-9]+\]`)
+var linkAlpha *regexp.Regexp = regexp.MustCompile(`[[:alpha:]]+`)
+var linkDigit *regexp.Regexp = regexp.MustCompile(`[[:digit:]]+`)
+
+var knownLinkTypes map[string]interface{} = make(map[string]interface{})
 
 // Searches is used to query the search endpoint
 type Searches struct {
@@ -61,4 +70,54 @@ func (s *Searches) Search(ctx context.Context, searchTerm string) (*[]SearchResu
 	}
 
 	return &resp, err
+}
+
+// ResolveLinks attempts to lookup and resolve the names of linked entities in a string.
+// E.g. attempt to resolve "Hailing from the city of [location:1234]" to "Hailing from the city of Neverwinter"
+func (s *Searches) ResolveLinks(ctx context.Context, rawString string) string {
+
+	// Extract [alpha:digit] instances from string
+	links := linkRe.FindAllString(rawString, -1)
+	for _, link := range links {
+
+		// Extract the [type:ID]
+		linkType := linkAlpha.FindString(link)
+		linkIDAsString := linkDigit.FindString(link)
+
+		// Quick check to make sure we didn't mess this up
+		if linkType == "" || linkIDAsString == "" {
+			continue
+		}
+
+		// Convert link ID to integer
+		linkID, err := strconv.Atoi(linkIDAsString)
+		if err != nil {
+			continue
+		}
+
+		// Do we recognize this link type? Extract the function if so (otherwise, skip)
+		linkFn, ok := knownLinkTypes[linkType]
+		if !ok {
+			continue
+		}
+
+		// Resolve the name (will be "" if resolution fails)
+		resolvedName := linkFn.(func(context.Context, *Client, int, int) string)(ctx, s.client, s.campaignID, linkID)
+
+		// Empty name means we probably failed to resolve it
+		if resolvedName == "" {
+			continue
+		}
+
+		// Rewrite the raw string
+		rawString = strings.Replace(rawString, link, resolvedName, 1)
+	}
+
+	return rawString
+}
+
+// addKnownLinkType is used to register known link types (characters, locations) and the function to look up their name.
+// It should be called by all entity source files (e.g. character.go) in their init function
+func addKnownLinkType(typeName string, fn interface{}) {
+	knownLinkTypes[typeName] = fn
 }

@@ -35,6 +35,13 @@ type Race struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("race", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		race, _ := client.Races(campaignID).GetRace(ctx, entityID)
+		return race.Name
+	})
+}
+
 // Races returns a handle of the races endpoint
 func (c *Client) Races(campaignID int) *Races {
 	return &Races{

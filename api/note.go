@@ -36,6 +36,13 @@ type Note struct {
 	UpdatedBy int       `json:"updated_by"`
 }
 
+func init() {
+	addKnownLinkType("note", func(ctx context.Context, client *Client, campaignID int, entityID int) string {
+		note, _ := client.Notes(campaignID).GetNote(ctx, entityID)
+		return note.Name
+	})
+}
+
 // Notes returns a handle of the notes endpoint
 func (c *Client) Notes(campaignID int) *Notes {
 	return &Notes{
